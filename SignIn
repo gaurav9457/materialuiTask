@@ -1,0 +1,200 @@
+import * as React from 'react';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Link from '@mui/material/Link';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { NavLink, useNavigate } from 'react-router-dom';
+import ForgotPassword from './ForgotPassword';
+import { Alert, Collapse, IconButton, Paper, Snackbar } from '@mui/material';
+import { Padding } from '@mui/icons-material';
+import { MyContext } from './AuthProvider';
+import CloseIcon from '@mui/icons-material/Close';
+import { useTranslation } from 'react-i18next';
+
+
+
+const defaultTheme = createTheme();
+
+let obj = {
+    Email: '',
+    Password: ''
+}
+
+export default function SignIn() {
+
+    const{t} =useTranslation();
+    const {i18n}= useTranslation();
+
+    let [sinp, setSinp] = React.useState(obj);
+    const [answer, setAnswer] = React.useState(false);
+    const [showAlert, setShowAlert] = React.useState(false);
+    const [successAlert, setSuccessAlert] = React.useState(false);
+    const [open, setOpen] = React.useState(false);
+    const [message, setMessage] = React.useState('');
+    const naviget = useNavigate();
+    const object = React.useContext(MyContext);
+    // const {name,setName} = React.useContext(MyContext);
+
+
+    let arr = localStorage.getItem('Obj') ? JSON.parse(localStorage.getItem('Obj')) : [];
+
+    const handelChange = (e) => {
+        // console.log("ertyudfghj");
+        setSinp(prev => ({
+            ...prev,
+            [e.target.name]: e.target.value
+        }));
+        setAnswer(true);
+        object.setName(sinp.Email);
+    }
+    //  setAnswer(false)
+
+    const validate = () => {
+        if (sinp.Email == '') {
+            setShowAlert(true);
+            setMessage("Please Enter Email");
+        }
+    }
+
+    // const validate2=()=>{
+    //     if (sinp.Email=='') {
+    //         alert("Enter Email")
+
+    //     }
+    //     else{
+    //         naviget(`/forgotpassword/${sinp.Email}`);
+    //     }
+    // }
+
+    const login = () => {
+        let foundUser = arr.find((user) => user.Email == sinp.Email)
+
+        if (foundUser && foundUser.Password == sinp.Password) {
+            object.setLoggedIn1(true);
+            // setShowAlert(true);
+            // setMessage("Login Successfull");  
+            setOpen(true);
+
+        }
+        else {
+            setShowAlert(true);
+            setMessage("Enter Valid Email Id and Password");
+        }
+    }
+
+
+    return (
+        <ThemeProvider theme={defaultTheme}>
+            <Container component="main" maxWidth="xs">
+                <Paper>
+
+                {open ? <Collapse in={open}>
+                    <Alert
+                        action={
+                            <Button color="secondary" size="small" onClick={() => { naviget('/view') }}>
+                               {t('Click here to proceed further')}
+                            </Button>
+                        }
+                        sx={{ mb: 2 }}
+                    >
+                       {t('Login Successfull')}
+                    </Alert>
+                </Collapse> : []}
+
+                <CssBaseline />
+                <Paper elevation={4} sx={{ padding: '2%', mt: '1%' }}>
+                    <Box
+                        sx={{
+                            marginTop: 4,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                            <LockOutlinedIcon />
+                        </Avatar>
+                        <Typography component="h1" variant="h5">
+                        {t('Sign in')}
+                        </Typography>
+                        <Box component="form" noValidate sx={{ mt: 1 }}>
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id=""
+                                label={t('Email Address')}
+                                name="Email"
+                                onChange={handelChange}
+
+                                value={sinp.Email}
+                            // autoComplete="email"
+                            // autoFocus
+                            />
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                name="Password"
+                                label={t('Password')}
+                                type="password"
+                                value={sinp.Password}
+                                onChange={handelChange}
+                                id=""
+                            // autoComplete="current-password"
+                            />
+                            <FormControlLabel
+                                control={<Checkbox value="remember" color="primary" />}
+                                label={t('Remember me')}
+                            />
+                            <Button
+                                // type="submit"
+                                fullWidth
+                                variant="contained"
+                                color='warning'
+                                sx={{ mt: 3, mb: 2 }}
+                                onClick={login}
+                            >
+                                {t('Sign In')}
+                            </Button>
+                            <Grid container>
+                                <Grid item md={3}>
+                                    {/* <Link href={`/forgotpassword/${sinp.Email}`} variant="body2">
+                                    Forgot password?
+                                </Link>  */}
+                                    {answer ? <NavLink to={`/forgotpassword/${sinp.Email}`} variant="body2" style={{ textDecoration: 'none', color: '#1976d2' }}>
+                                        
+                                        {t('Forgot password?')} </NavLink> : <Button onClick={validate}>{t('Forgot password?')} </Button>}
+                                </Grid>
+                                <Grid item md={9}>
+                                    <Button > <NavLink to={`/form`} variant="body2" style={{ textDecoration: 'none', color: '#1976d2' }}>
+                                        {t("Don't have an account? Sign Up")}
+                                    </NavLink></Button>
+                                </Grid>
+                            </Grid>
+                        </Box>
+                        {showAlert && (
+                            <Snackbar open={showAlert} autoHideDuration={3000}
+                                onClose={() => { setShowAlert(false) }} anchorOrigin={{ vertical: 'top', horizontal: "right" }} >
+                                <Alert onClose={() => { setShowAlert(false) }} severity="error" sx={{ width: '100%' }} >
+                                    {message}
+                                </Alert>
+                            </Snackbar>
+
+                        )}
+                    </Box>
+                </Paper>
+                </Paper>
+            </Container>
+        </ThemeProvider>
+    );
+}
