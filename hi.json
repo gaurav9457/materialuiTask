@@ -1,0 +1,46 @@
+{
+    "Home": "होम",
+    "About": "जानकारी",
+    "Contact": "संपर्क",
+    "Logout": "लॉगआउट",
+    "Please Enter Email": "कृपया ईमेल दर्ज करें",
+    "Enter Valid Email Id and Password": "वैध ईमेल आईडी और पासवर्ड दर्ज करें",
+    "Click here to proceed further": "आगे बढ़ने के लिए यहाँ क्लिक करें",
+    "english": "अंग्रेज़ी",
+    "hindi": "हिन्दी",
+
+    
+  "Login Successfull": "लॉगिन सफल",
+  "Sign in": "साइन इन",
+  "Email Address": "ईमेल पता",
+  "Remember me": "मुझे याद रखें",
+  "Sign In": "साइन इन",
+  "Forgot password?": "पासवर्ड भूल गए हैं?",
+  "FORGOT PASS": "पासवर्ड भूल गए?",
+  "Don't have an account? Sign Up": "खाता नहीं है? साइन अप करें",
+  "Language": "भाषा",
+  "LOGO": "लोगो",
+  "Delete": "हटाएं",
+  "View": "दृश्य",
+  "View Details": "विवरण देखें",
+
+
+  "Register": "रजिस्टर",
+  "First Name": "पहला नाम",
+  "Middle Name": "मध्य नाम",
+  "Last name": "अंतिम नाम",
+  "abc@gmail.com": "abc@gmail.com",
+  "Email Id": "ईमेल",
+  "Password": "पासवर्ड",
+  "Sign up": "साइन अप",
+  "Cancel": "रद्द करें",
+  "Please Fill First name": "कृपया पहला नाम भरें",
+  "First name not contain numbers": "पहला नाम अंक नहीं हो सकता",
+  "Last name not contain numbers": "अंतिम नाम अंक नहीं हो सकता",
+  "Please Fill last name": "कृपया अंतिम नाम भरें",
+  "Please Fill Email": "कृपया ईमेल भरें",
+  "Please Fill Password": "कृपया पासवर्ड भरें",
+  "Form Submitted": "फॉर्म सबमिट किया गया"
+    
+}
+    
