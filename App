@@ -1,0 +1,46 @@
+# materialuiTask
+import logo from './logo.svg';
+import './App.css';
+
+import Mui from './Mui';
+import Home from './Home';
+import { BrowserRouter, Form, Route, Routes } from 'react-router-dom';
+import View from './View';
+import DataForm from './DataForm';
+import SignIn from './SignIn';
+import ForgotPassword from './ForgotPassword';
+import ToggleColorMode from './ToggleColorMode';
+import { Paper } from '@mui/material';
+import image from './programmer.png';
+import p2 from './p2.png';
+import "./i18n"
+
+function App() {
+  return (
+    
+      
+     <ToggleColorMode>
+     <Paper sx={{height:'100vh'}}>
+
+
+      <Home />
+
+      <Routes>
+        
+        <Route path='/' element={<SignIn />} />
+        <Route path={`/forgotpassword/:Email`} element={<ForgotPassword />} />
+        <Route path='/form' element={<DataForm />} />
+        <Route path='/view' element={<View />} />
+      </Routes>
+      </Paper>
+
+     </ToggleColorMode>
+    
+
+      
+     
+
+  );
+}
+
+export default App;
