@@ -1,0 +1,230 @@
+import { Margin } from '@mui/icons-material'
+import { Alert, Box, Button, Container, Grid, IconButton, Paper, Slide, Snackbar, Stack, TextField, Typography } from '@mui/material'
+import { alignProperty } from '@mui/material/styles/cssUtils'
+import React, { useState } from 'react'
+import { Link, json, useNavigate } from 'react-router-dom'
+import CloseIcon from '@mui/icons-material/Close';
+import { useTranslation } from 'react-i18next'
+
+const obj={
+    Fname:'',
+    Mname:'',
+    Lname:'',
+    Email:'',
+    Password:''
+}
+const DataForm = () => {
+    const[dataobj,setDataObj] =useState(obj);
+    const [showAlert, setShowAlert] = useState(false);
+    const[successAlert,setSuccessAlert] =useState(false);
+    const[message,setMessage] = useState('');
+    const naviget=useNavigate();
+    const {t} = useTranslation();
+
+    let arr = localStorage.getItem('Obj') ? JSON.parse(localStorage.getItem('Obj')) : [];
+    
+    const emailExists = arr.some((item) => item.Email === dataobj.Email);
+    // const checkEmail=()=>{
+    //     arr.map((item,index)=>{
+    //         if (dataobj.Email==item.Email) {
+    //             // alert("Email already exists")
+    //             setShowAlert(true);
+    //             setMessage('Email already exists');
+    //             // window.location.reload();
+    //             // setDataObj('');
+    //         }
+    //         else{
+                
+
+    //         }
+
+    //     })
+    // }
+   
+
+    const handleChange=(e)=>{
+        
+        setDataObj({
+            ...dataobj,
+            [e.target.name]:e.target.value
+        })
+        // checkEmail();
+    }
+
+   
+    const validate=()=>{
+
+        const pattern = /^[A-Za-z\s]+$/;
+        if (dataobj.Fname=='') {
+            setShowAlert(true);
+            setMessage(t('Please Fill First name'))  
+        }
+
+        else if(!dataobj.Fname.match(pattern)){
+            setShowAlert(true);
+            setMessage(t('First name not contain numbers'))  
+
+        }
+        else if(!dataobj.Lname.match(pattern)){
+            setShowAlert(true);
+            setMessage(t('Last name not contain numbers'))  
+
+        }
+
+       else if (dataobj.Lname=='') {
+            setShowAlert(true);
+            setMessage(t('Please Fill last name'));
+            
+        }
+        else if (dataobj.Email=='') {
+            setShowAlert(true);
+            setMessage(t('Please Fill Email'));
+            
+        }
+        else if(emailExists){
+            setShowAlert(true);
+            setMessage(t('Email already exists'));
+        }
+        else if (dataobj.Password=='') {
+            setShowAlert(true);
+            setMessage(t('Please Fill Password'));
+            
+        }
+        else{
+            onSubmit();
+            // alert("Form Submitted")
+            setSuccessAlert(true);
+            setMessage(t("Form Submitted"));
+            naviget('/');
+        }
+    }
+     
+
+    const onSubmit=()=>{
+       
+        let arr = localStorage.getItem('Obj') ? JSON.parse(localStorage.getItem('Obj')) : [];
+
+        const updatedData=[...arr,dataobj];
+
+        localStorage.setItem("Obj",JSON.stringify(updatedData));
+
+        setDataObj(obj);
+        
+        
+    }
+
+    return (
+        <>
+            <Container maxWidth='md' >
+                {/* <Grid container spacing={2} marginTop={3}>
+                    <Grid item >
+                        <div>
+                            <TextField
+                                required
+                                id="outlined-required"
+                                label="Required"
+                                defaultValue="Hello World"
+                            />
+                            <TextField
+                                disabled
+                                id="outlined-disabled"
+                                label="Disabled"
+                                defaultValue="Hello World"
+                            />
+                        </div>
+                    </Grid>
+                    <Grid item >
+                    <TextField
+                                id="outlined-password-input"
+                                label="Password"
+                                type="password"
+                                autoComplete="current-password"
+                            />
+                            <TextField
+                                id="outlined-read-only-input"
+                                label="Read Only"
+                                defaultValue="Hello World"
+                                InputProps={{
+                                    readOnly: true,
+                                }}
+                            /> 
+                           
+                    </Grid>
+                    <Grid item >
+                    <TextField
+                                id="outlined-password-input"
+                                label="Password"
+                                type="password"
+                                autoComplete="current-password"
+                            />
+                            <TextField
+                                id="outlined-read-only-input"
+                                label="Read Only"
+                                defaultValue="Hello World"
+                                InputProps={{
+                                    readOnly: true,
+                                }}
+                            /> 
+                           
+                    </Grid>
+
+
+                </Grid> */}
+                <Paper component="form"  sx={{mt:4,border:"1px solid black",m:5,padding:3}}  elevation={7}>
+                    <Typography sx={{textAlign:'center',fontWeight:'bold', fontSize:'20px',color:'orangered'}}>{t('Register')} </Typography>
+                    
+
+                    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 1, sm: 2, md: 4 }} maxWidth={'100%'} justifyContent={'space-evenly'}>
+                    <TextField  onChange={handleChange} value={dataobj.Fname} variant='standard'  
+                     placeholder={t('First Name')} label={t('First Name')} name='Fname'color='warning' required/>
+
+                    <TextField   onChange={handleChange} value={dataobj.Mname}   variant='standard'
+                     placeholder={t('Middle Name')} label={t('Middle Name')} name='Mname'color='warning' />
+
+                    <TextField   onChange={handleChange} value={dataobj.Lname}   variant='standard'
+                     placeholder={t('Last name')} label={t('Last name')} name='Lname'color='warning' required/>
+                    </Stack>
+                   
+                    
+                   <Stack direction={'row'}  marginTop={5} justifyContent={'space-evenly'}>
+                   <TextField onChange={handleChange} value={dataobj.Email} variant='outlined' label={t("Email Id")}
+                     placeholder='abc@gmail.com' name="Email"color='warning'  required  />
+ 
+                    <TextField  onChange={handleChange} value={dataobj.Password} variant='outlined' label={t("Password")}
+                     placeholder={t("Password")} name='Password' color='warning' required />
+
+                   </Stack>
+                   {showAlert && (
+                     <Snackbar open={showAlert} autoHideDuration={3000} 
+                    onClose={()=>{setShowAlert(false)}} anchorOrigin={{ vertical:'top', horizontal:"right" }} >
+                    <Alert onClose={()=>{setShowAlert(false)}} severity="error" sx={{ width: '100%' }} >
+                       {message} 
+                    </Alert>
+                  </Snackbar>
+                       
+                       )}
+
+                       {successAlert && (
+                        <Snackbar open={successAlert} autoHideDuration={3000} 
+                        onClose={()=>{setSuccessAlert(false)}} anchorOrigin={{ vertical:'top', horizontal:"center" }} >
+                        <Alert onClose={()=>{setSuccessAlert(false)}} severity="success" sx={{ width: '100%' }} >
+                           {message} 
+                        </Alert>
+                      </Snackbar>
+                       )}
+
+                    <Stack spacing={3} direction={'row'} justifyContent={'center'} mt={3}>
+                    <Button variant="outlined" onClick={validate} color='warning'><Link  style={{textDecoration:"none",color:"orange"}}> {t('Sign up')} </Link></Button>
+                    <Button variant="contained" color='warning'><Link to={"/"} style={{textDecoration:"none",color:"white"}}> {t('Cancel')} </Link></Button>
+                    </Stack>
+
+                </Paper>
+
+            </Container>
+
+
+        </>
+    )
+}
+
+export default DataForm
