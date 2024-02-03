@@ -1,0 +1,26 @@
+import React, { createContext, useState } from "react";
+
+export const MyContext = createContext();
+
+const AuthProvider = ({ children }) => {
+  const [isLoggedIn, setLoggedIn] = useState(false);
+  const [name, setName] = useState("");
+  const [userData, setUserData] = useState("");
+
+  const object = {
+    isLoggedIn1: isLoggedIn,
+    setLoggedIn1: setLoggedIn,
+    name: name,
+    setName: setName,
+    setUserData: setUserData,
+    userData: userData,
+  };
+
+  return (
+    <>
+      <MyContext.Provider value={object}>{children}</MyContext.Provider>
+    </>
+  );
+};
+
+export default AuthProvider;
