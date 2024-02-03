@@ -1,0 +1,199 @@
+import React, { useContext, useEffect, useState } from 'react'
+import { styled } from '@mui/material/styles';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import { Button, CircularProgress, Container, Drawer } from '@mui/material';
+import BasicRating from './BasicRating';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { useTranslation } from 'react-i18next';
+import { MyContext } from './AuthProvider';
+
+
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+      backgroundColor: theme.palette.common.black,
+      color: theme.palette.common.white,
+    },
+    [`&.${tableCellClasses.body}`]: {
+      fontSize: 14,
+    },
+  }));
+  
+  const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    '&:nth-of-type(odd)': {
+      backgroundColor: theme.palette.action.hover,
+    },
+    // hide last border
+    '&:last-child td, &:last-child th': {
+      border: 0,
+    },
+    
+  }));
+
+
+const View = () => {
+    const [loading,setLoading]=useState(true)
+    const [data, setData] = useState([]);
+    const [drawerOpen, setDrawerOpen] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
+    const {t} =useTranslation();
+    const object =useContext(MyContext);
+
+    let filterdata= object.userData;
+    // const disData = filterdata ? filterdata : data;
+
+
+      
+    useEffect(() => {
+        const fetchData = async () => {
+         
+          const fetchedData = localStorage.getItem('Obj') ? JSON.parse(localStorage.getItem('Obj')) : setLoading(true);
+          setData(fetchedData);
+          setLoading(false);
+        };
+    
+        fetchData();
+      }, []);
+
+      useEffect(() => {
+        // Perform actions after the state has been updated
+        const updateData = data.filter((item) =>
+          item.Fname.toLowerCase().includes(filterdata.toLowerCase())
+        );
+        localStorage.setItem('Obj', JSON.stringify(updateData));
+      }, [data, filterdata]);
+    
+      const deleteItem = (index) => {
+        if (index >= 0 && finalData.length) {
+          const originalIndex = data.findIndex(
+            (item) => item.Fname === finalData[index].Fname
+          );
+      
+          if (originalIndex !== -1) {
+            const updateData = [...data];
+            updateData.splice(originalIndex, 1);
+            setData(updateData);
+            localStorage.setItem('Obj', JSON.stringify(updateData));
+          }
+        }
+      };
+      
+    
+      const finalData = data.filter((item) => item.Fname.toLowerCase().includes(filterdata.toLowerCase()));
+    
+
+      // const finalData= data.filter((item)=>item.Fname.toLowerCase().includes(filterdata.toLowerCase())
+                                    // item.Email.toLowerCase().includes(filterdata.toLowerCase())
+                                    // );
+
+      
+     
+      //  console.log("Filter",filterdata);
+      // let disData = filterdata ? data : filterdata;
+      
+
+      // const deleteItem=(index)=>{
+      //   if (index>=0 && finalData.length) {
+      //     const originalIndex=data.findIndex(
+      //       (item)=> item.Fname === finalData[index].Fname
+      //     );
+
+      //     if (originalIndex !==-1) {
+      //       const updateData=[...finalData]
+      //        updateData.splice(originalIndex,1)
+      //        setData(updateData);
+      //         localStorage.setItem('Obj',JSON.stringify(updateData));
+            
+      //     }
+          
+      //   }
+       
+      // }
+      // useEffect(() => {
+      //   // Perform actions after the state has been updated
+      //   localStorage.setItem('Obj', JSON.stringify(finalData));
+      // }, [finalData]);
+
+      const openDrawer = (user) => {
+        setSelectedUser(user);
+        setDrawerOpen(true);
+      };
+    
+      const closeDrawer = () => {
+        setDrawerOpen(false);
+      };
+    
+    // const data= localStorage.getItem('Obj') ? JSON.parse(localStorage.getItem('Obj')) : [];
+
+  return (
+    <div >
+        <h1 style={{textAlign:"center"}}>{t('View Details')}</h1>
+      
+      <Container maxWidth='md'>
+      {loading ? (
+          <CircularProgress sx={{ display: 'block', margin: 'auto', mt: 5 }} />
+        ) : (
+      <TableContainer component={Paper}>
+      <Table sx={{ minWidth: 500 }} aria-label="customized table" >
+        <TableHead>
+          <TableRow>
+            <StyledTableCell align='center'>{t('First Name')}</StyledTableCell>
+            <StyledTableCell align="center">{t('Middle Name')}</StyledTableCell>
+            <StyledTableCell align="center">{t('Last name')}</StyledTableCell>
+            <StyledTableCell align="center">{t('Email Id')}</StyledTableCell>
+            <StyledTableCell align="center">{t('Password')}</StyledTableCell>
+            <StyledTableCell align="center">{t('Action')}</StyledTableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {finalData.map((row,index) => (
+            <StyledTableRow key={row.name}>
+            <StyledTableCell align='center' >
+              {row.Fname}
+            </StyledTableCell>
+            <StyledTableCell align="center">{row.Mname}</StyledTableCell>
+            <StyledTableCell align="center">{row.Lname}</StyledTableCell>
+            <StyledTableCell align="center">{row.Email}</StyledTableCell>
+            <StyledTableCell align="center">{row.Password}</StyledTableCell>
+            <StyledTableCell align="center"><Button onClick={()=>openDrawer(row)}>{t('View')}&nbsp; <VisibilityIcon/> </Button> 
+            <Button onClick={()=>deleteItem(index)} color='error' > {t('Delete')} <DeleteForeverIcon /></Button></StyledTableCell>
+
+          </StyledTableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+        )}
+        
+         <Drawer anchor="left" open={drawerOpen} onClose={closeDrawer}>
+        <div>
+         
+          {selectedUser && (
+            <div style={{textAlign:'center'}}>
+              <h2>User Details</h2>
+              <p>First Name: {selectedUser.Fname}</p>
+              <p>Middle Name: {selectedUser.Mname}</p>
+              <p>Last Name: {selectedUser.Lname}</p>
+              <p>Email: {selectedUser.Email}</p>
+             
+            </div>
+          )}
+        </div>
+      </Drawer>
+
+        <BasicRating/>
+        
+
+    </Container>
+    </div>
+  )
+}
+
+export default View
