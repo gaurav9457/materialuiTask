@@ -1,0 +1,47 @@
+import * as React from 'react';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import Button from '@mui/material/Button';
+import { useTranslation } from 'react-i18next';
+
+export default function ControlledOpenSelect() {
+  const [age, setAge] = React.useState('');
+  // const [open, setOpen] = React.useState(false);
+
+  const { t, i18n } = useTranslation();
+
+  const handleChange = (event) => {
+    setAge(event.target.value);
+  };
+
+  const changeLanguage = (lng) => {
+    // console.log("langauage ",lng);
+
+    i18n.changeLanguage(lng);
+
+  };
+
+  return (
+    <div>
+      <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+        <InputLabel id="demo-select-small-label">{t('Language')}</InputLabel>
+        <Select
+          labelId="demo-select-small-label"
+          id="demo-select-small"
+          value={age}
+          label={t('Language')}
+          onChange={handleChange}
+        >
+          <MenuItem value={t('English')} onClick={() => changeLanguage('en')}>
+            {t('English')}
+          </MenuItem>
+          <MenuItem value={t('Hindi')} onClick={() => changeLanguage('hi')}>
+            {t('Hindi')}
+          </MenuItem>
+        </Select>
+      </FormControl>
+    </div>
+  );
+}
